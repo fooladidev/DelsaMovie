@@ -1,9 +1,10 @@
 ﻿using DelsaMovie.Data.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DelsaMovie.Data
 {
-    public class DatabaseContext :DbContext
+    public class DatabaseContext : IdentityDbContext<ApiUser>
 
     {
         public DatabaseContext(DbContextOptions options) : base(options) { }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DelsaMovie.Data;
 using DelsaMovie.Data.Entities;
 using DelsaMovie.Models;
 
@@ -16,6 +17,8 @@ namespace DelsaMovie.Configurations
             CreateMap<Comment, CreateCommentDTO>().ReverseMap();
             CreateMap<Link, LinkDTO>().ReverseMap();
             CreateMap<Link, CreateLinkDTO>().ReverseMap();
+            CreateMap<ApiUser, ApiUserDTO>().ReverseMap();
+
 
 
         }

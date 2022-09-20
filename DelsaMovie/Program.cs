@@ -2,6 +2,7 @@ using DelsaMovie.Configurations;
 using DelsaMovie.Data;
 using DelsaMovie.IRepository;
 using DelsaMovie.Repository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -23,7 +24,9 @@ namespace DelsaMovie
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddDbContext<DatabaseContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnString")));
-            // builder.Services.AddSwaggerGen();
+
+            builder.Services.AddAuthentication();
+            builder.Services.ConfigureIdentity();
 
 
             builder.Services .AddAutoMapper(typeof(MapperInitializer));
@@ -33,8 +36,7 @@ namespace DelsaMovie
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                //app.UseSwagger();
-                //app.UseSwaggerUI();
+
             }
 
             app.UseHttpsRedirection();
