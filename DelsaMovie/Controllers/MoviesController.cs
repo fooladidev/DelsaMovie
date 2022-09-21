@@ -2,6 +2,7 @@
 using DelsaMovie.Data.Entities;
 using DelsaMovie.IRepository;
 using DelsaMovie.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,6 +28,7 @@ namespace DelsaMovie.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        
         public async Task<IActionResult> GetMovies()
         {
             
@@ -47,9 +49,13 @@ namespace DelsaMovie.Controllers
             }
         }
 
+
+
+        [Authorize]
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        
         public async Task<IActionResult> GetMovie(int id)
         {
             try

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DelsaMovie.Data;
 using DelsaMovie.Models;
+using DelsaMovie.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,18 +15,19 @@ namespace DelsaMovie.Controllers
         private readonly UserManager<ApiUser> _userManager;
         private readonly ILogger<AccountController> _logger;
         private readonly IMapper _mapper;
+        private readonly IAuthManager _authManager;
 
 
 
         public AccountController(UserManager<ApiUser> userManager,
             
             ILogger<AccountController> logger,
-            IMapper mapper)
+            IMapper mapper, IAuthManager authManager)
         {
             _userManager = userManager;
             _logger = logger;
             _mapper = mapper;
-
+            _authManager = authManager;
         }
 
         [HttpPost]
@@ -42,7 +44,8 @@ namespace DelsaMovie.Controllers
             {
                 var user =_mapper.Map<ApiUser>(userDTO);
                 user.UserName = userDTO.Email;
-                var result = await _userManager.CreateAsync(user);
+                var result = await _userManager.CreateAsync(user,userDTO.Password);
+
                 if (!result.Succeeded)
                 {
                     foreach(var err in result.Errors)
@@ -54,6 +57,7 @@ namespace DelsaMovie.Controllers
 
                     
                 }
+                await _userManager.AddToRolesAsync(user, userDTO.Roles);
                 return Accepted();
 
 
@@ -67,7 +71,7 @@ namespace DelsaMovie.Controllers
 
         }
 
-        /*[HttpPost]
+        [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginUserDTO userDTO)
         {
@@ -79,13 +83,12 @@ namespace DelsaMovie.Controllers
             }
             try
             {
-                var result = await _signInManager.PasswordSignInAsync(userDTO.Email,userDTO.Passwrod,false,false);
-                if (!result.Succeeded)
+                if (!await _authManager.ValidateUser(userDTO))
                 {
                     return Unauthorized(userDTO);
-                    
+
                 }
-                return Accepted();
+                return Accepted(new {Token = await _authManager.CreateToken()});
 
 
             }
@@ -98,6 +101,6 @@ namespace DelsaMovie.Controllers
 
 
         }
-*/
+
     }
 }

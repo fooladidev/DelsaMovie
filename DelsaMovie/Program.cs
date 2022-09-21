@@ -2,6 +2,7 @@ using DelsaMovie.Configurations;
 using DelsaMovie.Data;
 using DelsaMovie.IRepository;
 using DelsaMovie.Repository;
+using DelsaMovie.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -27,10 +28,13 @@ namespace DelsaMovie
 
             builder.Services.AddAuthentication();
             builder.Services.ConfigureIdentity();
+            builder.Services.ConfigureJWT(builder.Configuration);
 
 
             builder.Services .AddAutoMapper(typeof(MapperInitializer));
             builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IAuthManager, AuthManager>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -41,6 +45,9 @@ namespace DelsaMovie
 
             app.UseHttpsRedirection();
 
+    
+            app.UseAuthentication();    
+       
             app.UseAuthorization();
 
 

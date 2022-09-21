@@ -1,4 +1,5 @@
-﻿using DelsaMovie.Data.Entities;
+﻿using DelsaMovie.Configurations.Entities;
+using DelsaMovie.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,14 @@ namespace DelsaMovie.Data
 
         public DbSet<Link> Links { get; set; }
         public DbSet<Comment> Comments { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.ApplyConfiguration(new RoleConfiguration());
+        }
+
+
 
 
     }
